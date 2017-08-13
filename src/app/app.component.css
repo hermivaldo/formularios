@@ -1,0 +1,20 @@
+.example-icon {
+  padding: 0 14px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.example-container {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.example-sidenav-content {
+  height: 82.8vh;
+}
+
+.example-sidenav{
+  width: 20%;
+}
+
