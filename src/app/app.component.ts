@@ -4,7 +4,12 @@ import { Component } from '@angular/core';
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MdIconRegistry } from '@angular/material';
-import { MdDialog } from '@angular/material';
+import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
+import { NgForm } from '@angular/forms';
+import { MdSelectModule } from '@angular/material';
+import {Inject} from '@angular/core';
+import {MD_DIALOG_DATA} from '@angular/material';
+
 
 @Component({
   selector: 'app-root',
@@ -13,54 +18,85 @@ import { MdDialog } from '@angular/material';
 })
 export class AppComponent {
   color: string;
+  objetosFormulario: any = new Map();
+
   availableColors = [
-    { name: 'teste 001', color: 'primary' },
-    { name: 'teste 002', color: 'primary' },
-    { name: 'teste 003', color: 'primary' },
-    { name: 'teste 004', color: 'primary' },
-    { name: 'teste 005', color: 'primary' },
-    { name: 'teste 006', color: 'primary' },
-    { name: 'teste 007', color: 'primary' },
-    { name: 'teste 008', color: 'primary' },
-    { name: 'teste 009', color: 'primary' },
-    { name: 'teste 010', color: 'primary' },
-    { name: 'teste 011', color: 'primary' },
-    { name: 'teste 012', color: 'primary' },
-    { name: 'teste 013', color: 'primary' },
-    { name: 'teste 014', color: 'primary' }
+    { name: 'teste 001', color: 'accent' , tipo: 'select'},
+    { name: 'teste 002', color: 'accent' , tipo: 'input'}
   ];
-   openDialog() {
-    this.dialog.open(DialogOverviewExampleDialog);
+   openDialog(e) {
+
+    if (e.target.parentElement.id == "right"){
+      if (e.target.id.indexOf("select") !== -1){
+        let idEvento = e.target.id;
+        let objetoModal = this.objetosFormulario.get(idEvento);
+        let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {height: '650px', width: '900px',  data: { opcoes: objetoModal} });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result != null || result != undefined){
+              this.objetosFormulario.set(idEvento, result);
+              console.log(this.objetosFormulario);
+            }
+        });
+      }
+    }
+
   }
   constructor(private dragulaService: DragulaService, iconRegistry: MdIconRegistry, sanitizer: DomSanitizer,
     http: HttpModule, public dialog: MdDialog, private renderer: Renderer) {
+    dragulaService.drop.subscribe((value) => {
+      this.onDrop(value.slice(1));
+    });
     dragulaService.setOptions('first-bag', {
        copy: function (el, source) {
-        // To copy only elements in left container, the right container can still be sorted
+
           return source.id === 'left';
         },
         copySortSource: false,
         accepts: function(el, target, source, sibling) {
-          // To avoid draggin from right to left container
-          console.log(el);
-          console.log(sibling);
-          return target.id !== 'left';
+          let status:boolean = target.id !== 'left';
+          return status;
         },
         removeOnSpill : function (el, target, source, sibling){
           return target.id !== 'left';
         }
     });
-    renderer.listen('body', 'click', (event) => {
-        console.log(event.target.onclick);
-    });
     iconRegistry.addSvgIcon(
         'thumbs-up',
         sanitizer.bypassSecurityTrustResourceUrl('assets/img/examples/thumbup-icon.svg'));
   }
+
+  private onDrop(args) {
+    let [e, el] = args;
+    let conteudo = document.getElementById("right");
+
+    if (e.id == "select"){
+      e.id = "select" + (conteudo.childNodes.length - 1);
+    }
+    console.log(e.id);
+  }
+
 }
 
 @Component({
-  templateUrl: 'example-dialog.html',
+  templateUrl: 'example-dialog.html'
 })
-export class DialogOverviewExampleDialog {}
+export class DialogOverviewExampleDialog {
+
+  constructor(public dialogRef: MdDialogRef<DialogOverviewExampleDialog>, @Inject(MD_DIALOG_DATA) data: any) {
+
+      if (data.opcoes != null || data.opcoes != undefined){
+        this.names = data.opcoes.replace(/,/g, '\n');
+        this.criarArray(data.opcoes.replace(/,/g, '\n'));
+      }
+
+  }
+   private names: string[] = [];
+   private opcoesArray : string[] = [];
+   private selecionado : string = "";
+
+   criarArray(e){
+      this.opcoesArray = e.split('\n');
+   }
+}
 

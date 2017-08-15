@@ -18,3 +18,10 @@
   width: 20%;
 }
 
+.example-card {
+  width: 400px;
+}
+
+.example-header-image {
+  background-size: cover;
+}

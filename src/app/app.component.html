@@ -9,7 +9,6 @@
     Jolly good!
   </md-sidenav>
 <md-card class="example-sidenav-content">
-    <button md-button >Open dialog</button>
     <md-grid-list cols="4" rowHeight="1:1">
       <md-grid-tile text="one" [colspan]="1" [rowspan]="1" style="background-color: #7b1fa2; height: 35vh;">
       <md-card class="example-card" [style.minHeight]="'100%'" [style.minWidth]="'100%'">
@@ -17,29 +16,28 @@
         <md-card-content>
           <md-chip-list class="mat-chip-list-stacked">
             <div [dragula]='"first-bag"' id='left'>
-              <md-chip (click)="openDialog()" *ngFor="let chipColor of availableColors"
-                color="{{chipColor.color}}">
+              <md-chip *ngFor="let chipColor of availableColors" id="{{chipColor.tipo}}" color="{{chipColor.color}}">
               {{chipColor.name}}
             </md-chip>
             </div>
-            
+
           </md-chip-list>
-        </md-card-content> 
+        </md-card-content>
       </md-card>
       </md-grid-tile>
       <md-grid-tile text="one" [colspan]="3" [rowspan]="1" style="background-color: #7b1fa2; height: 35vh;" >
-          <md-card id='right' style="background-color: red;" [style.minHeight]="'100%'" [style.minWidth]="'100%'">
+          <md-card style="background-color: red;" [style.minHeight]="'100%'" [style.minWidth]="'100%'">
             <md-grid-list cols="1" rowHeight="4:1">
                <md-grid-tile  text="one" style="background-color: #7b1fa2;">
-                 <md-card [dragula]='"first-bag"' id='right' style="background-color: blue;" [style.minHeight]="'100%'" [style.minWidth]="'100%'">
+                 <md-card (click)="openDialog($event)" [dragula]='"first-bag"' id='right' style="background-color: blue;" [style.minHeight]="'100%'" [style.minWidth]="'100%'">
                  </md-card>
                </md-grid-tile>
             </md-grid-list>
           </md-card>
       </md-grid-tile>
     </md-grid-list>
-    
-  
+
+
 </md-card>
 
 </md-sidenav-container>
