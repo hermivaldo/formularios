@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 // itens pessoal
 import { AppComponent } from './app.component';
 import { DialogOverviewExampleDialog } from './app.component';
+import { DialogInput } from './app.component';
 
 /// Itens de terceiros
 import { DragulaModule } from 'ng2-dragula';
@@ -25,7 +26,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     AppComponent,
-    DialogOverviewExampleDialog
+    DialogOverviewExampleDialog,
+    DialogInput
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MdDialogModule,
     BrowserAnimationsModule,
   ],
-  entryComponents: [DialogOverviewExampleDialog],
+  entryComponents: [DialogOverviewExampleDialog,
+  DialogInput],
   providers: [],
   bootstrap: [AppComponent]
 })

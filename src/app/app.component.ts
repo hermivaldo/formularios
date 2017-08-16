@@ -7,8 +7,8 @@ import { MdIconRegistry } from '@angular/material';
 import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
 import { NgForm } from '@angular/forms';
 import { MdSelectModule } from '@angular/material';
-import {Inject} from '@angular/core';
-import {MD_DIALOG_DATA} from '@angular/material';
+import { Inject } from '@angular/core';
+import { MD_DIALOG_DATA } from '@angular/material';
 
 
 @Component({
@@ -22,23 +22,27 @@ export class AppComponent {
 
   availableColors = [
     { name: 'teste 001', color: 'accent' , tipo: 'select'},
-    { name: 'teste 002', color: 'accent' , tipo: 'input'}
+    { name: 'teste 002', color: 'accent' , tipo: 'input'},
+    { name: 'teste 003', color: 'accent' , tipo: 'text'}
   ];
    openDialog(e) {
 
     if (e.target.parentElement.id == "right"){
-      if (e.target.id.indexOf("select") !== -1){
-        let idEvento = e.target.id;
-        let objetoModal = this.objetosFormulario.get(idEvento);
-        let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {height: '650px', width: '900px',  data: { opcoes: objetoModal} });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result != null || result != undefined){
-              this.objetosFormulario.set(idEvento, result);
-              console.log(this.objetosFormulario);
-            }
-        });
+      let idEvento = e.target.id;
+      let objetoModal = this.objetosFormulario.get(idEvento);
+      let dialogRef;
+      if (idEvento.indexOf("select") !== -1){
+          dialogRef = this.dialog.open(DialogOverviewExampleDialog, {height: '650px', width: '900px',  data: { opcoes: objetoModal} });
+      }else if (idEvento.indexOf("text") !== -1){
+              dialogRef = this.dialog.open(DialogInput, {height: '650px', width: '900px',  data: { opcoes: objetoModal} });
       }
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result != null || result != undefined){
+          this.objetosFormulario.set(idEvento, result);
+          console.log(this.objetosFormulario);
+        }
+      });
     }
 
   }
@@ -72,11 +76,37 @@ export class AppComponent {
 
     if (e.id == "select"){
       e.id = "select" + (conteudo.childNodes.length - 1);
+    }else if (e.id == "text"){
+      e.id = "text" + (conteudo.childNodes.length - 1);
     }
     console.log(e.id);
   }
 
 }
+
+@Component({
+  templateUrl: 'text-dialog.html'
+})
+export class DialogInput {
+   private names: string = "";
+
+  constructor(public dialogRef: MdDialogRef<DialogInput>, @Inject(MD_DIALOG_DATA) data: any) {
+
+      if (data.opcoes != null || data.opcoes != undefined){
+        this.names = data.opcoes.replace(/,/g, '\n');
+        //this.adicionarTexto(data.opcoes.replace(/,/g, '\n'));
+      }
+
+  }
+  
+  // private opcoesArray : string[] = [];
+  // private selecionado : string = "";
+
+   //adicionarTexto(e){
+   //   this.opcoesArray = e.split('\n');
+   //}
+}
+
 
 @Component({
   templateUrl: 'example-dialog.html'
@@ -99,4 +129,6 @@ export class DialogOverviewExampleDialog {
       this.opcoesArray = e.split('\n');
    }
 }
+
+
 
